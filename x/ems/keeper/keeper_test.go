@@ -30,6 +30,8 @@ import (
 	module "github.com/rollchains/hackmoschain/x/ems"
 	"github.com/rollchains/hackmoschain/x/ems/keeper"
 	"github.com/rollchains/hackmoschain/x/ems/types"
+
+	nftkeeper "cosmossdk.io/x/nft/keeper"
 )
 
 var maccPerms = map[string][]string{
