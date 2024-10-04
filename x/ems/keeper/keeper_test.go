@@ -9,6 +9,7 @@ import (
 	"cosmossdk.io/log"
 	storetypes "cosmossdk.io/store/types"
 
+	"github.com/cosmos/cosmos-sdk/codec/address"
 	"github.com/cosmos/cosmos-sdk/runtime"
 	"github.com/cosmos/cosmos-sdk/testutil"
 	simtestutil "github.com/cosmos/cosmos-sdk/testutil/sims"
@@ -79,7 +80,17 @@ func SetupTest(t *testing.T) *testFixture {
 	registerBaseSDKModules(f, encCfg, storeService, logger, require)
 
 	// Setup Keeper.
-	f.k = keeper.NewKeeper(encCfg.Codec, storeService, logger, f.govModAddr)
+	addressCodec := address.NewBech32Codec(sdk.Bech32MainPrefix)                                // Initialize addressCodec
+	nftKeeper := nftkeeper.NewKeeper(storeService, encCfg.Codec, f.accountkeeper, f.bankkeeper) // Initialize nftKeeper
+
+	f.k = keeper.NewKeeper(
+		encCfg.Codec,
+		addressCodec, // Pass addressCodec
+		storeService,
+		logger,
+		f.govModAddr,
+		nftKeeper, // Pass nftKeeper
+	)
 	f.msgServer = keeper.NewMsgServerImpl(f.k)
 	f.queryServer = keeper.NewQuerier(f.k)
 	f.appModule = module.NewAppModule(encCfg.Codec, f.k)
