@@ -1,0 +1,84 @@
+// syntax = "proto3";
+// package ems.v1;
+
+// import "google/api/annotations.proto";
+// import "ems/v1/genesis.proto";
+
+// option go_package = "github.com/rollchains/hackmoschain/x/ems/types";
+
+// // Query provides defines the gRPC querier service.
+// service Query {
+//   // Params queries all parameters of the module.
+//   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+//     option (google.api.http).get = "/ems/v1/params";
+//   }
+
+//   // rpc GetEvent(QueryGetEventRequest) returns (QueryGetEventResponse) {
+//   //   option (google.api.http).get = "/ems/v1/name/{organizer}";
+//   // }
+
+//   rpc GetEvent(QueryGetEventRequest) returns (QueryGetEventResponse) {
+//     option (google.api.http).get = "/ems/v1/event/{name}";
+//   }
+// }
+
+// // QueryParamsRequest is the request type for the Query/Params RPC method.
+// message QueryParamsRequest {}
+
+// // QueryParamsResponse is the response type for the Query/Params RPC method.
+// message QueryParamsResponse {
+//   // params defines the parameters of the module.
+//   Params params = 1;
+// }
+
+// message QueryGetEventRequest {
+//   // string organizer = 1;
+//   string name = 1;
+// }
+
+// message QueryGetEventResponse {
+//   //   string name = 1;
+//   string organizer = 1;
+//   string name = 2;
+//   string description = 3; 
+//   string location = 4; 
+//   string date = 5; 
+//   string time = 6;
+//   string ticket_price = 7; 
+//   uint64 num_tickets = 8; 
+//   repeated string ticket_categories = 9; 
+// }
+
+// proto/ems/v1/query.proto
+syntax = "proto3";
+package ems.v1;
+
+import "google/api/annotations.proto";
+import "ems/v1/ems.proto"; // Import ems.proto
+import "ems/v1/genesis.proto"; // Import genesis.proto
+
+option go_package = "github.com/rollchains/hackmoschain/x/ems/types";
+
+service Query {
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/ems/v1/params";
+  }
+
+  rpc GetEvent(QueryGetEventRequest) returns (QueryGetEventResponse) {
+    option (google.api.http).get = "/ems/v1/event/{id}";
+  }
+}
+
+message QueryParamsRequest {}
+
+message QueryParamsResponse {
+  Params params = 1;
+}
+
+message QueryGetEventRequest {
+  string id = 1;
+}
+
+message QueryGetEventResponse {
+  Event event = 1; // Use the Event message from ems.proto
+}
